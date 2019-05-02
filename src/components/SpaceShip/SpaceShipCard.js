@@ -2,17 +2,19 @@ import React from 'react'
 import PropType from 'prop-types'
 
 const propTypes = {
-  name: PropType.string,
-  model: PropType.string,
+  distance: PropType.number,
+  mglt: PropType.number,
   manufacturer: PropType.string,
-  mglt: PropType.number
+  model: PropType.string,
+  name: PropType.string,
 }
 
 const defaultProps = {
-  name: null,
-  model: null,
+  distance: null,
+  mglt: null,
   manufacturer: null,
-  mglt: null
+  model: null,
+  name: null
 }
 
 function calculateNumOfStopsByMGLT(distance, capacity) {
@@ -23,16 +25,14 @@ function calculateNumOfStopsByMGLT(distance, capacity) {
 
 const SpaceShipCard = (props) => {
   const {
+    distance,
     name,
     model,
     manufacturer,
     mglt
   } = props
 
-  let distance = 1000
-  let capacity = mglt
-
-  let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, capacity)
+  let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt)
 
   return (
     <div>
