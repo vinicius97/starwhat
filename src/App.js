@@ -5,7 +5,12 @@ import { SpaceShipCard } from './components/SpaceShip'
 
 function App() {
   return (
-    <SpaceShipCard />
+    <SpaceShipCard
+      manufacturer={'Millennium Falcon'}
+      model={'YT-1300 light freighter'}
+      mglt={75}
+      name={'Millennium Falcon'}
+    />
   )
 }
 
