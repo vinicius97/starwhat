@@ -1,3 +1,3 @@
-import { SpaceShipCard } from './SpaceShipCard'
+import SpaceShipCard from './SpaceShipCard'
 
 export { SpaceShipCard }
