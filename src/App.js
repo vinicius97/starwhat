@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 
 //Components
-import { SpaceShipCard } from './components/SpaceShip'
+import { SpaceShipList } from './components/SpaceShip'
 import { BasicInput } from './components/Form'
 
 class App extends PureComponent {
@@ -23,13 +23,7 @@ class App extends PureComponent {
     return (
       <div>
         <BasicInput onChange={(e) => this.handleChange('distance', e.target.value)} />
-        <SpaceShipCard
-          manufacturer={'Millennium Falcon'}
-          model={'YT-1300 light freighter'}
-          mglt={75}
-          name={'Millennium Falcon'}
-          distance={distance}
-        />
+        <SpaceShipList distance={distance} />
       </div>
     )
   }

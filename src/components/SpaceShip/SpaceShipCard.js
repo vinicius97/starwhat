@@ -23,7 +23,7 @@ function calculateNumOfStopsByMGLT(distance, capacity) {
   return Math.ceil(numOfStops)
 }
 
-const SpaceShipCard = (props) => {
+export const SpaceShipCard = (props) => {
   const {
     distance,
     name,
