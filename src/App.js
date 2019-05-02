@@ -1,10 +1,11 @@
 import React from 'react'
 
+//Components
+import { SpaceShipCard } from './components/SpaceShip'
+
 function App() {
   return (
-    <div className="App">
-      Render something
-    </div>
+    <SpaceShipCard />
   );
 }
 
