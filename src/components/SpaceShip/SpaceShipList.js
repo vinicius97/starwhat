@@ -11,9 +11,7 @@ function retrieveStarShips() {
     let starShipsProcessedProperties = []
 
     starShips.map(starship => {
-
       let { manufacturer, model, name, MGLT } = starship
-
       return starShipsProcessedProperties.push({ manufacturer, model, name, mglt: parseInt(MGLT) })
     })
 
@@ -26,8 +24,6 @@ function retrieveStarShips() {
 const SpaceShipList = (props) => {
   const { distance } = props
   const starShips = retrieveStarShips()
-
-  console.log(starShips)
 
   return starShips && starShips.map((starShip, key) => {
     const { manufacturer, model, name, mglt } = starShip
