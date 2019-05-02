@@ -1,45 +1,72 @@
-import React from 'react'
-import StarShipMockResponse from './data/starshipMockResponse.json'
+import React, { PureComponent } from 'react'
+import { http } from '../../commons/http'
 
 //Components
 import { SpaceShipCard } from './SpaceShipCard'
 
-function retrieveStarShips() {
-  try {
-    const starShips = StarShipMockResponse.results
+class SpaceShipList extends PureComponent {
 
-    let starShipsProcessedProperties = []
-
-    starShips.map(starship => {
-      let { manufacturer, model, name, MGLT } = starship
-      return starShipsProcessedProperties.push({ manufacturer, model, name, mglt: parseInt(MGLT) })
-    })
-
-    return starShipsProcessedProperties
-  } catch (e) {
-    throw e
+  state = {
+    starShips: null
   }
-}
 
-const SpaceShipList = (props) => {
-  const { distance } = props
-  const starShips = retrieveStarShips()
+  handleRequestStarShips = async () => {
+    return await http('https://swapi.co/api/starships/')
+  }
 
-  return starShips && starShips.map((starShip, key) => {
-    const { manufacturer, model, name, mglt } = starShip
+  handleLoadStarShips = async () => {
+    try {
+      const starShips = await this.handleRequestStarShips()
 
-    return (
-        <SpaceShipCard
-          manufacturer={manufacturer}
-          model={model}
-          name={name}
-          mglt={mglt}
-          distance={distance}
-          key={key}
-        />
+      let starShipsProcessedProperties = []
+
+      starShips.results.map(starship => {
+        let { manufacturer, model, name, MGLT } = starship
+        let properties = {
+          manufacturer,
+          model,
+          name,
+          mglt: parseInt(MGLT)
+        }
+
+        return starShipsProcessedProperties.push(properties)
+      })
+
+      this.setState({
+        starShips: starShipsProcessedProperties
+      })
+
+    } catch (e) {
+      throw e
+    }
+  }
+
+  componentDidMount () {
+    this.handleLoadStarShips()
+  }
+
+  render() {
+    {
+      const { distance } = this.props
+      const { starShips }= this.state
+
+      return starShips && starShips.map((starShip, key) => {
+          const { manufacturer, model, name, mglt } = starShip
+
+          return (
+            <SpaceShipCard
+              manufacturer={manufacturer}
+              model={model}
+              name={name}
+              mglt={mglt}
+              distance={distance}
+              key={key}
+            />
+          )
+        }
       )
     }
-  )
+  }
 }
 
 export default SpaceShipList

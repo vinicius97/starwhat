@@ -17,7 +17,6 @@ class App extends PureComponent {
   }
 
   render() {
-
     let { distance } = this.state
 
     return (
