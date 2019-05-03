@@ -20,7 +20,7 @@ const defaultProps = {
   name: null
 }
 
-function calculateNumOfStopsByMGLT(distance, capacity) {
+export function calculateNumOfStopsByMGLT(distance, capacity) {
   let numOfStops = distance/capacity
 
   return Math.ceil(numOfStops)
