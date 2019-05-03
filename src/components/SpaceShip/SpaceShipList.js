@@ -92,12 +92,12 @@ class SpaceShipList extends PureComponent {
       const response = await this.handleRequestData(url)
       let starShipsProcessedProperties = []
 
-      response.results.map(starship => {
+      response.data.results.map(starship => {
         starShipsProcessedProperties.push(this.handleProcessStarShipPropTypes(starship))
       })
 
       this.handleChange('starShips', starShipsProcessedProperties)
-      this.handlePaginationState(response, url)
+      this.handlePaginationState(response.data, url)
 
     } catch (e) {
       throw e

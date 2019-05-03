@@ -22,7 +22,10 @@ class App extends PureComponent {
 
     return (
       <div>
+        Pesquisar
         <BasicInput onChange={(e) => this.handleChange('searchTerm', e.target.value)} />
+
+        Distância a ser percorrida(em Megalights)
         <BasicInput onChange={(e) => this.handleChange('distance', e.target.value)} />
         <SpaceShipList searchTerm={searchTerm} distance={distance} />
       </div>
