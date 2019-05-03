@@ -35,32 +35,31 @@ class SpaceShipList extends PureComponent {
     })
   }
 
+  handleProcessStarShipPropTypes = (starship) => {
+    let { manufacturer, model, name, MGLT } = starship
+
+    if(MGLT === 'unknow') {
+      MGLT = null
+    } else {
+      MGLT = parseInt(MGLT)
+    }
+
+    return {
+      manufacturer,
+      model,
+      name,
+      mglt: MGLT
+    }
+  }
+
   handleLoadStarShips = async (url = 'https://swapi.co/api/starships/') => {
     try {
       const response = await this.handleRequestStarShips(url)
-
       let starShipsProcessedProperties = []
 
       response.results.map(starship => {
-        let { manufacturer, model, name, MGLT } = starship
-
-        if(MGLT === 'unknow') {
-          MGLT = null
-        } else {
-          MGLT = parseInt(MGLT)
-        }
-
-        let properties = {
-          manufacturer,
-          model,
-          name,
-          mglt: MGLT
-        }
-
-        return starShipsProcessedProperties.push(properties)
+        starShipsProcessedProperties.push(this.handleProcessStarShipPropTypes(starship))
       })
-
-      console.log(starShipsProcessedProperties)
 
       this.handleChange('starShips', starShipsProcessedProperties)
       this.handleListState(response)
