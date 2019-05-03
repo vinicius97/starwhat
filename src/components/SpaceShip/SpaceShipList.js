@@ -7,37 +7,84 @@ import { SpaceShipCard } from './SpaceShipCard'
 class SpaceShipList extends PureComponent {
 
   state = {
-    starShips: null
+    starShips: null,
+    numOfStartShips: null,
+    pages: {
+      next: null,
+      previous: null
+    }
   }
 
-  handleRequestStarShips = async () => {
-    return await http('https://swapi.co/api/starships/')
+  handleChange = (type, value) => (
+    this.setState({
+      [type]: value
+    })
+  )
+
+  handleRequestStarShips = async (url) => {
+    return await http(url)
   }
 
-  handleLoadStarShips = async () => {
+  handleListState = (response) => {
+    this.setState({
+      numOfStartShips: response.count,
+      pages: {
+        next: response.next,
+        previous: response.previous
+      }
+    })
+  }
+
+  handleLoadStarShips = async (url = 'https://swapi.co/api/starships/') => {
     try {
-      const starShips = await this.handleRequestStarShips()
+      const response = await this.handleRequestStarShips(url)
 
       let starShipsProcessedProperties = []
 
-      starShips.results.map(starship => {
+      response.results.map(starship => {
         let { manufacturer, model, name, MGLT } = starship
+
+        if(MGLT === 'unknow') {
+          MGLT = null
+        } else {
+          MGLT = parseInt(MGLT)
+        }
+
         let properties = {
           manufacturer,
           model,
           name,
-          mglt: parseInt(MGLT)
+          mglt: MGLT
         }
 
         return starShipsProcessedProperties.push(properties)
       })
 
-      this.setState({
-        starShips: starShipsProcessedProperties
-      })
+      console.log(starShipsProcessedProperties)
+
+      this.handleChange('starShips', starShipsProcessedProperties)
+      this.handleListState(response)
 
     } catch (e) {
       throw e
+    }
+  }
+
+  handleLoadNextPage = () => {
+    let { pages } = this.state
+    let nextPage = pages.next
+
+    if(nextPage !== null) {
+      this.handleLoadStarShips(nextPage)
+    }
+  }
+
+  handleLoadPreviousPage = () => {
+    let { pages } = this.state
+    let previousPage = pages.previous
+
+    if(previousPage !== null) {
+      this.handleLoadStarShips(previousPage)
     }
   }
 
@@ -46,26 +93,38 @@ class SpaceShipList extends PureComponent {
   }
 
   render() {
-    {
-      const { distance } = this.props
-      const { starShips }= this.state
 
-      return starShips && starShips.map((starShip, key) => {
-          const { manufacturer, model, name, mglt } = starShip
+    const { distance } = this.props
+    const { starShips }= this.state
 
-          return (
-            <SpaceShipCard
-              manufacturer={manufacturer}
-              model={model}
-              name={name}
-              mglt={mglt}
-              distance={distance}
-              key={key}
-            />
-          )
+    return (
+      <div>
+        {starShips &&
+          starShips.map((starShip, key) => {
+            const { manufacturer, model, name, mglt } = starShip
+
+            return (
+              <SpaceShipCard
+                manufacturer={manufacturer}
+                model={model}
+                name={name}
+                mglt={mglt}
+                distance={distance}
+                key={key}
+              />
+            )
+          })
         }
-      )
-    }
+
+        <button onClick={this.handleLoadPreviousPage}>
+          Página Anterior
+        </button>
+        <button onClick={this.handleLoadNextPage}>
+          Proxima página
+        </button>
+      </div>
+    )
+
   }
 }
 
