@@ -1,4 +1,7 @@
 import React, { PureComponent } from 'react'
+import PropType from 'prop-types'
+
+//Commons
 import { http } from '../../commons/http'
 
 //Components
@@ -15,13 +18,21 @@ class SpaceShipList extends PureComponent {
     }
   }
 
+  static propTypes = {
+    distance: PropType.number
+  }
+
+  static defaultProps = {
+    distance: null
+  }
+
   handleChange = (type, value) => (
     this.setState({
       [type]: value
     })
   )
 
-  handleRequestStarShips = async (url) => {
+  handleRequestData = async (url) => {
     return await http(url)
   }
 
@@ -38,7 +49,9 @@ class SpaceShipList extends PureComponent {
   handleProcessStarShipPropTypes = (starship) => {
     let { manufacturer, model, name, MGLT } = starship
 
-    if(MGLT === 'unknow') {
+    console.log(MGLT)
+
+    if(MGLT === 'unknown') {
       MGLT = null
     } else {
       MGLT = parseInt(MGLT)
@@ -54,7 +67,7 @@ class SpaceShipList extends PureComponent {
 
   handleLoadStarShips = async (url = 'https://swapi.co/api/starships/') => {
     try {
-      const response = await this.handleRequestStarShips(url)
+      const response = await this.handleRequestData(url)
       let starShipsProcessedProperties = []
 
       response.results.map(starship => {
