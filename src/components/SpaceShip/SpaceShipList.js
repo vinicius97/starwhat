@@ -12,18 +12,22 @@ class SpaceShipList extends PureComponent {
   state = {
     starShips: null,
     numOfStartShips: null,
+    searchTerm: null,
     pages: {
+      actual: null,
       next: null,
       previous: null
     }
   }
 
   static propTypes = {
-    distance: PropType.number
+    distance: PropType.number,
+    searchTerm: PropType.string
   }
 
   static defaultProps = {
-    distance: null
+    distance: null,
+    searchTerm: null
   }
 
   handleChange = (type, value) => (
@@ -32,24 +36,42 @@ class SpaceShipList extends PureComponent {
     })
   )
 
-  handleRequestData = async (url) => {
-    return await http(url)
+  handleChangeSearchTerm = (searchTerm) => {
+    this.handleChange('searchTerm', searchTerm)
   }
 
-  handleListState = (response) => {
+  handlePaginationState = (response, actualPage) => {
     this.setState({
       numOfStartShips: response.count,
       pages: {
+        actual: actualPage,
         next: response.next,
         previous: response.previous
       }
     })
   }
 
+  handleRequestData = async (url) => {
+    let { searchTerm } = this.state
+
+    if(searchTerm) {
+      let indexOfSearchParam = url.indexOf('search')
+      if(indexOfSearchParam > -1) {
+        url = url.slice((indexOfSearchParam - 1), url.length)
+      }
+
+      if(url.indexOf('?') > -1) {
+        url += '&search=' + searchTerm
+      } else {
+        url += '?search=' + searchTerm
+      }
+    }
+
+    return await http(url)
+  }
+
   handleProcessStarShipPropTypes = (starship) => {
     let { manufacturer, model, name, MGLT } = starship
-
-    console.log(MGLT)
 
     if(MGLT === 'unknown') {
       MGLT = null
@@ -65,7 +87,7 @@ class SpaceShipList extends PureComponent {
     }
   }
 
-  handleLoadStarShips = async (url = 'https://swapi.co/api/starships/') => {
+  handleLoadStarShips = async (url = 'https://swapi.co/api/starships') => {
     try {
       const response = await this.handleRequestData(url)
       let starShipsProcessedProperties = []
@@ -75,7 +97,7 @@ class SpaceShipList extends PureComponent {
       })
 
       this.handleChange('starShips', starShipsProcessedProperties)
-      this.handleListState(response)
+      this.handlePaginationState(response, url)
 
     } catch (e) {
       throw e
@@ -100,17 +122,38 @@ class SpaceShipList extends PureComponent {
     }
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let state = {}
+
+    if(nextProps.searchTerm !== prevState.searchTerm) {
+      state = {
+        searchTerm: nextProps.searchTerm
+      }
+    }
+
+    return state
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if(prevProps.searchTerm !== this.props.searchTerm) {
+      this.handleLoadStarShips(prevState.pages.actual)
+    }
+  }
+
   componentDidMount () {
     this.handleLoadStarShips()
+    this.handleChangeSearchTerm(this.props.searchTerm)
   }
 
   render() {
 
     const { distance } = this.props
-    const { starShips } = this.state
+    const { starShips, searchTerm } = this.state
 
     return (
       <div>
+        Termo de busca: {searchTerm}
+
         {starShips &&
           starShips.map((starShip, key) => {
             const { manufacturer, model, name, mglt } = starShip

@@ -7,7 +7,8 @@ import { BasicInput } from './components/Form'
 class App extends PureComponent {
 
   state = {
-    distance: null
+    distance: null,
+    searchTerm: null
   }
 
   handleChange = (type, value) => {
@@ -17,12 +18,13 @@ class App extends PureComponent {
   }
 
   render() {
-    let { distance } = this.state
+    let { distance, searchTerm } = this.state
 
     return (
       <div>
+        <BasicInput onChange={(e) => this.handleChange('searchTerm', e.target.value)} />
         <BasicInput onChange={(e) => this.handleChange('distance', e.target.value)} />
-        <SpaceShipList distance={distance} />
+        <SpaceShipList searchTerm={searchTerm} distance={distance} />
       </div>
     )
   }
