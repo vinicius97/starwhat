@@ -39,8 +39,13 @@ export const SpaceShipCard = (props) => {
       Nome: {name}
       Modelo: {model}
       Fabricante: {manufacturer}
-      Megalights: {mglt}
-      Número de paradas necessárias para percorrer a distância de {distance} megalights: {numOfStopsNeeded}
+      Megalights: {mglt ? mglt : 'Não há informações disponíveis'}
+      {(isNaN(numOfStopsNeeded))
+        ? (
+          'Não há dados o suficiente para calcular o número de paradas necessárias'
+        ) : (
+          `Número de paradas necessárias para percorrer a distância de ${distance} megalights: ${numOfStopsNeeded}`
+        )}
     </div>
   )
 }

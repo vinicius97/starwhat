@@ -94,7 +94,7 @@ class SpaceShipList extends PureComponent {
   render() {
 
     const { distance } = this.props
-    const { starShips }= this.state
+    const { starShips } = this.state
 
     return (
       <div>
