@@ -148,7 +148,9 @@ class SpaceShipList extends PureComponent {
   render() {
 
     const { distance } = this.props
-    const { starShips, searchTerm } = this.state
+    const { numOfStartShips, starShips, searchTerm } = this.state
+
+    let showPagination = (numOfStartShips > 10)
 
     return (
       <div>
@@ -171,12 +173,16 @@ class SpaceShipList extends PureComponent {
           })
         }
 
-        <button onClick={this.handleLoadPreviousPage}>
-          Página Anterior
-        </button>
-        <button onClick={this.handleLoadNextPage}>
-          Proxima página
-        </button>
+        {showPagination && (
+          <div>
+            <button onClick={this.handleLoadPreviousPage}>
+              Página Anterior
+            </button>
+            <button onClick={this.handleLoadNextPage}>
+              Proxima página
+            </button>
+          </div>
+        )}
       </div>
     )
 
