@@ -1,0 +1,13 @@
+.basic-input {
+  &--number {
+    text-align: center;
+    border: none;
+    border-bottom: 3px solid var(--primary-color);
+    background: transparent;
+    width: 100px;
+    margin: 5px;
+    color: var(--highlight-color);
+    font-size: 26px;
+    padding: 16px;
+  }
+}

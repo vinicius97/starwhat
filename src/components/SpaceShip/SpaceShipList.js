@@ -6,6 +6,11 @@ import { http } from '../../commons/http'
 
 //Components
 import { SpaceShipCard } from './SpaceShipCard'
+import { PaginationNavigation } from '../Pagination'
+
+//Assets
+import StartWarsLogo from '../../views/App/assets/images/star_wars_logo.svg'
+import './assets/styles/SpaceShipList.scss'
 
 class SpaceShipList extends PureComponent {
 
@@ -140,7 +145,7 @@ class SpaceShipList extends PureComponent {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.handleLoadStarShips()
     this.handleChangeSearchTerm(this.props.searchTerm)
   }
@@ -152,11 +157,17 @@ class SpaceShipList extends PureComponent {
 
     let showPagination = (numOfStartShips > 10)
 
-    return (
-      <div>
-        Termo de busca: {searchTerm}
+    const classNameMap = {
+      base: 'space-ship-list',
+      body: 'space-ship-list__body'
+    }
 
-        {starShips &&
+    return (
+      <div className={classNameMap.base}>
+        {searchTerm && (`Termo de busca: ${searchTerm}`)}
+
+        <div className={classNameMap.body}>
+          {starShips &&
           starShips.map((starShip, key) => {
             const { manufacturer, model, name, mglt } = starShip
 
@@ -171,17 +182,13 @@ class SpaceShipList extends PureComponent {
               />
             )
           })
-        }
+          }
+        </div>
 
         {showPagination && (
-          <div>
-            <button onClick={this.handleLoadPreviousPage}>
-              Página Anterior
-            </button>
-            <button onClick={this.handleLoadNextPage}>
-              Proxima página
-            </button>
-          </div>
+          <PaginationNavigation
+            onPreviousPage={this.handleLoadPreviousPage}
+            onNextPage={this.handleLoadNextPage} />
         )}
       </div>
     )

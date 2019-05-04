@@ -1,24 +1,11 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import PropType from 'prop-types'
 
 //Assets
 import './assets/styles/SpaceChipCard.scss'
 
-const propTypes = {
-  distance: PropType.number,
-  mglt: PropType.number,
-  manufacturer: PropType.string,
-  model: PropType.string,
-  name: PropType.string,
-}
-
-const defaultProps = {
-  distance: null,
-  mglt: null,
-  manufacturer: null,
-  model: null,
-  name: null
-}
+//Components
+import textLimiter from '../TextLimiter'
 
 export function calculateNumOfStopsByMGLT(distance, capacity) {
   let numOfStops = distance/capacity
@@ -26,36 +13,114 @@ export function calculateNumOfStopsByMGLT(distance, capacity) {
   return Math.ceil(numOfStops)
 }
 
-export const SpaceShipCard = (props) => {
-  const {
-    distance,
-    name,
-    model,
-    manufacturer,
-    mglt
-  } = props
+class SpaceShipCard extends PureComponent {
 
-  let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt)
+  static propTypes = {
+    distance: PropType.number,
+    mglt: PropType.number,
+    manufacturer: PropType.string,
+    model: PropType.string,
+    name: PropType.string,
+  }
 
-  return (
-    <div className={'space-ship-card'}>
-      <div className={'space-ship-card__body'}>
-        <span>Nome: {name}</span>
-        <span>Modelo: {model}</span>
-        <span>Fabricante: {manufacturer}</span>
-        <span>Megalights: {mglt ? mglt : 'Não há informações disponíveis'}</span>
-        <span>
-          {(isNaN(numOfStopsNeeded))
-            ? (
-              'Não há dados o suficiente para calcular o número de paradas necessárias'
-            ) : (
-              `Número de paradas necessárias para percorrer a distância de ${distance} megalights: ${numOfStopsNeeded}`
-            )}
-        </span>
+  static defaultProps = {
+    distance: null,
+    mglt: null,
+    manufacturer: null,
+    model: null,
+    name: null
+  }
+
+  state = {
+    expanded: false
+  }
+
+  handleShowMode = () => {
+    this.setState({
+      expanded: !this.state.expanded
+    })
+  }
+
+  render() {
+    const {
+      distance,
+      name,
+      model,
+      manufacturer,
+      mglt
+    } = this.props
+
+    const {
+      expanded
+    } = this.state
+
+    const classNameMap = {
+      base: 'space-ship-card',
+      expanded: 'space-ship-card space-ship-card--expanded',
+      body: 'space-ship-card__body',
+      field: 'space-ship-card__body__field',
+      field_key: 'space-ship-card__body__field__key',
+      field_value: 'space-ship-card__body__field__value'
+    }
+    let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt)
+
+    return (
+      <div
+        className={expanded ? classNameMap.expanded : classNameMap.base}
+        onClick={this.handleShowMode}>
+
+        <div className={classNameMap.body}>
+          <div className={classNameMap.field}>
+            <span className={classNameMap.field_key}>
+              Nome
+            </span>
+            <span className={classNameMap.field_value}>
+              {textLimiter(name, 23)}
+            </span>
+          </div>
+          <div className={classNameMap.field}>
+            <span className={classNameMap.field_key}>
+              Modelo
+            </span>
+            <span className={classNameMap.field_value}>
+              {textLimiter(model, 22)}
+            </span>
+          </div>
+          <div className={classNameMap.field}>
+            <span className={classNameMap.field_key}>
+              Fabricante
+            </span>
+            <span className={classNameMap.field_value}>
+              {textLimiter(manufacturer, 19)}
+            </span>
+          </div>
+          <div className={classNameMap.field}>
+            <span className={classNameMap.field_key}>
+              Megalights
+            </span>
+            <span className={classNameMap.field_value}>
+              {mglt ? mglt : 'Não há informações disponíveis'}
+            </span>
+          </div>
+          <div className={classNameMap.field}>
+            <span className={classNameMap.field_key}>
+              Número de paradas
+            </span>
+            <span className={classNameMap.field_value}>
+              {
+                (isNaN(numOfStopsNeeded))
+                  ? (
+                    'Não há dados o suficiente'
+                  ) : (
+                    numOfStopsNeeded
+                  )
+              }
+            </span>
+          </div>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
-SpaceShipCard.propTypes = propTypes
-SpaceShipCard.defaultProps = defaultProps
+export { SpaceShipCard }

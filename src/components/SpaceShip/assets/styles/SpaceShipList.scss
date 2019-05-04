@@ -1,0 +1,13 @@
+.space-ship-list {
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+}
