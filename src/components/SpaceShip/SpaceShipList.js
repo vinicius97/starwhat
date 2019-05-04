@@ -189,4 +189,4 @@ class SpaceShipList extends PureComponent {
   }
 }
 
-export default SpaceShipList
+export { SpaceShipList }

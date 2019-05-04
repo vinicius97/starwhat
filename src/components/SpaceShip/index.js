@@ -1,4 +1,4 @@
-import SpaceShipCard from './SpaceShipCard'
-import SpaceShipList from './SpaceShipList'
+import { SpaceShipCard } from './SpaceShipCard'
+import { SpaceShipList } from './SpaceShipList'
 
-export { SpaceShipCard, SpaceShipList}
+export { SpaceShipCard, SpaceShipList }

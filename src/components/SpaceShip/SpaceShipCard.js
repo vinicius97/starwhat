@@ -59,5 +59,3 @@ export const SpaceShipCard = (props) => {
 
 SpaceShipCard.propTypes = propTypes
 SpaceShipCard.defaultProps = defaultProps
-
-export default SpaceShipCard
