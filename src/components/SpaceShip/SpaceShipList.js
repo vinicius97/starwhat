@@ -7,9 +7,9 @@ import { http } from '../../commons/http'
 //Components
 import { SpaceShipCard } from './SpaceShipCard'
 import { PaginationNavigation } from '../Pagination'
+import { Loader } from '../Loader'
 
 //Assets
-import StartWarsLogo from '../../views/App/assets/images/star_wars_logo.svg'
 import './assets/styles/SpaceShipList.scss'
 import { BasicInput } from '../Form/Input'
 
@@ -19,6 +19,7 @@ class SpaceShipList extends PureComponent {
     starShips: null,
     numOfStartShips: null,
     searchTerm: null,
+    loading: false,
     pages: {
       actual: null,
       next: null,
@@ -92,6 +93,9 @@ class SpaceShipList extends PureComponent {
 
   handleLoadStarShips = async (url = 'https://swapi.co/api/starships') => {
     try {
+
+      this.handleChange('loading', true)
+
       const response = await this.handleRequestData(url)
       let starShipsProcessedProperties = []
 
@@ -102,8 +106,13 @@ class SpaceShipList extends PureComponent {
       this.handleChange('starShips', starShipsProcessedProperties)
       this.handlePaginationState(response.data, url)
 
+      this.handleChange('loading', false)
+
     } catch (e) {
+
+      this.handleChange('loading', false)
       throw e
+
     }
   }
 
@@ -137,7 +146,7 @@ class SpaceShipList extends PureComponent {
   render() {
 
     const { distance } = this.props
-    const { numOfStartShips, starShips, searchTerm } = this.state
+    const { numOfStartShips, starShips, searchTerm, loading } = this.state
 
     let showPagination = (numOfStartShips > 10)
 
@@ -149,32 +158,40 @@ class SpaceShipList extends PureComponent {
 
     return (
       <div className={classNameMap.base}>
-        Pesquisar
         <BasicInput
           className={classNameMap.search}
+          placeholder='Buscar por uma nave específica'
           onChange={(e) => this.handleChangeSearchTerm(e.target.value)} />
 
         {searchTerm && (`Termo de busca: ${searchTerm}`)}
 
-        <div className={classNameMap.body}>
-          {starShips &&
-          starShips.map((starShip, key) => {
-            const { manufacturer, model, consumables, name, mglt } = starShip
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className={classNameMap.body}>
+            {
+              starShips && starShips.length > 0 ? (
+                starShips.map((starShip, key) => {
+                  const { manufacturer, model, consumables, name, mglt } = starShip
 
-            return (
-              <SpaceShipCard
-                manufacturer={manufacturer}
-                model={model}
-                consumables={consumables}
-                name={name}
-                mglt={mglt}
-                distance={distance}
-                key={key}
-              />
-            )
-          })
+                  return (
+                    <SpaceShipCard
+                      manufacturer={manufacturer}
+                      model={model}
+                      consumables={consumables}
+                      name={name}
+                      mglt={mglt}
+                      distance={distance}
+                      key={key}
+                    />
+                  )
+                })
+              ) : (
+                'Não há resultados'
+              )
           }
-        </div>
+          </div>
+        )}
 
         {showPagination && (
           <PaginationNavigation
