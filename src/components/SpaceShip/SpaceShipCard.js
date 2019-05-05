@@ -7,16 +7,29 @@ import './assets/styles/SpaceChipCard.scss'
 //Components
 import textLimiter from '../TextLimiter'
 
-export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumable) {
+export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumable, calendarType = 'galactic') {
   if(distance === null || mgltByHour === null || consumable === null) {
     return null
   }
 
   const hour = 1
   const day = 24 * hour
-  const week = 5 * day
-  const month = 7 * week
-  const year = 368 * day
+
+  const galacticCalendar = {
+    hour,
+    day,
+    week: 5 * day,
+    month: 35 * day,
+    year: 368 * day
+  }
+
+  const earthCalendar = {
+    hour,
+    day,
+    week: 7 * day,
+    month: 31 * day,
+    year: 365 * day
+  }
 
   // Tempo baseado no calendário galático https://starwars.fandom.com/wiki/Galactic_Standard_Calendar
 
@@ -24,16 +37,24 @@ export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumable) {
   let consumableValue = parseFloat(consumableSplited[0])
   let consumableUnit = consumableSplited[1]
 
+  let calendar = null
+  if(calendarType === 'galactic') {
+    calendar = galacticCalendar
+  } else {
+    calendar = earthCalendar
+  }
+
   let convertionFactor = {
-    hour,
-    day,
-    days: day,
-    week,
-    weeks: week,
-    month,
-    months: month,
-    year,
-    years: year
+    hour: calendar.hour,
+    hours: calendar.hour,
+    day: calendar.day,
+    days: calendar.day,
+    week: calendar.week,
+    weeks: calendar.week,
+    month: calendar.month,
+    months: calendar.month,
+    year: calendar.year,
+    years: calendar.year
   }
 
   let consumableUnitInHours = convertionFactor[consumableUnit]
@@ -67,12 +88,12 @@ class SpaceShipCard extends PureComponent {
   }
 
   state = {
-    expanded: false
+    useEarthCalendar: false
   }
 
-  handleShowMode = () => {
+  handleUseEarthCalendar = () => {
     this.setState({
-      expanded: !this.state.expanded
+      useEarthCalendar: !this.state.useEarthCalendar
     })
   }
 
@@ -87,24 +108,26 @@ class SpaceShipCard extends PureComponent {
     } = this.props
 
     const {
-      expanded
+      useEarthCalendar
     } = this.state
 
     const classNameMap = {
       base: 'space-ship-card',
-      expanded: 'space-ship-card space-ship-card--expanded',
       body: 'space-ship-card__body',
       field: 'space-ship-card__body__field',
       field_key: 'space-ship-card__body__field__key',
       field_value: 'space-ship-card__body__field__value'
     }
 
-    let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt, consumables)
+    let calendar = useEarthCalendar ? 'earth' : 'galactic'
+    let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt, consumables, calendar)
 
     return (
-      <div
-        className={expanded ? classNameMap.expanded : classNameMap.base}
-        onClick={this.handleShowMode}>
+      <div className={classNameMap.base}>
+
+        <div onClick={() => this.handleUseEarthCalendar()}>
+          {useEarthCalendar ? '[x]' : '[ ]'} Usar calendário terráqueo
+        </div>
 
         <div className={classNameMap.body}>
           <div className={classNameMap.field}>

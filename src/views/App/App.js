@@ -38,9 +38,6 @@ class App extends PureComponent {
           <img width={'200px'} src={StartWarsLogo} alt='Logotipo do Star Wars'/>
         </div>
 
-        {/*Pesquisar
-        <BasicInput onChange={(e) => this.handleChange('searchTerm', e.target.value)} />*/}
-
         <div className={classNamesMap.callToAction}>
           <h2 className={classNamesMap.h2}>
             Distância a ser percorrida(em Megalights)

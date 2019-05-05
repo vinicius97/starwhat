@@ -11,6 +11,7 @@ import { PaginationNavigation } from '../Pagination'
 //Assets
 import StartWarsLogo from '../../views/App/assets/images/star_wars_logo.svg'
 import './assets/styles/SpaceShipList.scss'
+import { BasicInput } from '../Form/Input'
 
 class SpaceShipList extends PureComponent {
 
@@ -40,10 +41,6 @@ class SpaceShipList extends PureComponent {
       [type]: value
     })
   )
-
-  handleChangeSearchTerm = (searchTerm) => {
-    this.handleChange('searchTerm', searchTerm)
-  }
 
   handlePaginationState = (response, actualPage) => {
     this.setState({
@@ -110,6 +107,11 @@ class SpaceShipList extends PureComponent {
     }
   }
 
+  handleChangeSearchTerm = async (searchTerm) => {
+    await this.handleChange('searchTerm', searchTerm)
+    this.handleLoadStarShips()
+  }
+
   handleLoadNextPage = () => {
     let { pages } = this.state
     let nextPage = pages.next
@@ -128,27 +130,8 @@ class SpaceShipList extends PureComponent {
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let state = {}
-
-    if(nextProps.searchTerm !== prevState.searchTerm) {
-      state = {
-        searchTerm: nextProps.searchTerm
-      }
-    }
-
-    return state
-  }
-
-  componentDidUpdate = (prevProps, prevState) => {
-    if(prevProps.searchTerm !== this.props.searchTerm) {
-      this.handleLoadStarShips(prevState.pages.actual)
-    }
-  }
-
   componentDidMount() {
     this.handleLoadStarShips()
-    this.handleChangeSearchTerm(this.props.searchTerm)
   }
 
   render() {
@@ -160,11 +143,17 @@ class SpaceShipList extends PureComponent {
 
     const classNameMap = {
       base: 'space-ship-list',
-      body: 'space-ship-list__body'
+      body: 'space-ship-list__body',
+      search: 'space-ship-list__search'
     }
 
     return (
       <div className={classNameMap.base}>
+        Pesquisar
+        <BasicInput
+          className={classNameMap.search}
+          onChange={(e) => this.handleChangeSearchTerm(e.target.value)} />
+
         {searchTerm && (`Termo de busca: ${searchTerm}`)}
 
         <div className={classNameMap.body}>

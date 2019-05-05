@@ -1,6 +1,8 @@
 .space-ship-list {
   display: flex;
   flex-direction: column;
+  max-width: 800px;
+  margin: auto;
 
   &__body {
     display: flex;
@@ -9,5 +11,19 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+  }
+
+  &__search {
+    background: #e4e4e414;
+    color: var(--primary-color);
+    border: none;
+
+    padding: 20px;
+
+    text-align: center;
+    font-size: 20px;
+
+    outline: none;
+    margin-bottom: 50px;
   }
 }
