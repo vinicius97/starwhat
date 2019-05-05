@@ -1,0 +1,22 @@
+.pagination-navigation {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+
+  &__button {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: bold;
+    margin: 10px;
+    opacity: 0.8;
+
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
