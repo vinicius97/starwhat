@@ -7,8 +7,41 @@ import './assets/styles/SpaceChipCard.scss'
 //Components
 import textLimiter from '../TextLimiter'
 
-export function calculateNumOfStopsByMGLT(distance, capacity) {
-  let numOfStops = distance/capacity
+export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumable) {
+  if(distance === null || mgltByHour === null || consumable === null) {
+    return null
+  }
+
+  const hour = 1
+  const day = 24 * hour
+  const week = 5 * day
+  const month = 7 * week
+  const year = 368 * day
+
+  // Tempo baseado no calendário galático https://starwars.fandom.com/wiki/Galactic_Standard_Calendar
+
+  let consumableSplited = consumable.split(' ')
+  let consumableValue = parseFloat(consumableSplited[0])
+  let consumableUnit = consumableSplited[1]
+
+  let convertionFactor = {
+    hour,
+    day,
+    days: day,
+    week,
+    weeks: week,
+    month,
+    months: month,
+    year,
+    years: year
+  }
+
+  let consumableUnitInHours = convertionFactor[consumableUnit]
+  let consumableValueInHours = consumableValue * consumableUnitInHours
+
+  let tripTime = distance/mgltByHour
+
+  let numOfStops = tripTime/consumableValueInHours
 
   return Math.ceil(numOfStops)
 }
@@ -18,6 +51,7 @@ class SpaceShipCard extends PureComponent {
   static propTypes = {
     distance: PropType.number,
     mglt: PropType.number,
+    consumables: PropType.string,
     manufacturer: PropType.string,
     model: PropType.string,
     name: PropType.string,
@@ -25,6 +59,7 @@ class SpaceShipCard extends PureComponent {
 
   static defaultProps = {
     distance: null,
+    consumables: null,
     mglt: null,
     manufacturer: null,
     model: null,
@@ -45,6 +80,7 @@ class SpaceShipCard extends PureComponent {
     const {
       distance,
       name,
+      consumables,
       model,
       manufacturer,
       mglt
@@ -62,7 +98,8 @@ class SpaceShipCard extends PureComponent {
       field_key: 'space-ship-card__body__field__key',
       field_value: 'space-ship-card__body__field__value'
     }
-    let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt)
+
+    let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt, consumables)
 
     return (
       <div

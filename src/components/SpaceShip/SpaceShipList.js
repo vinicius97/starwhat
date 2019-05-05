@@ -76,7 +76,7 @@ class SpaceShipList extends PureComponent {
   }
 
   handleProcessStarShipPropTypes = (starship) => {
-    let { manufacturer, model, name, MGLT } = starship
+    let { manufacturer, model, name, MGLT, consumables } = starship
 
     if(MGLT === 'unknown') {
       MGLT = null
@@ -88,7 +88,8 @@ class SpaceShipList extends PureComponent {
       manufacturer,
       model,
       name,
-      mglt: MGLT
+      mglt: MGLT,
+      consumables
     }
   }
 
@@ -169,12 +170,13 @@ class SpaceShipList extends PureComponent {
         <div className={classNameMap.body}>
           {starShips &&
           starShips.map((starShip, key) => {
-            const { manufacturer, model, name, mglt } = starShip
+            const { manufacturer, model, consumables, name, mglt } = starShip
 
             return (
               <SpaceShipCard
                 manufacturer={manufacturer}
                 model={model}
+                consumables={consumables}
                 name={name}
                 mglt={mglt}
                 distance={distance}
