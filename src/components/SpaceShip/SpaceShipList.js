@@ -59,14 +59,15 @@ class SpaceShipList extends PureComponent {
 
     if(searchTerm) {
       let indexOfSearchParam = url.indexOf('search')
-      if(indexOfSearchParam > -1) {
-        url = url.slice((indexOfSearchParam - 1), url.length)
-      }
 
-      if(url.indexOf('?') > -1) {
-        url += '&search=' + searchTerm
+      if(indexOfSearchParam > 0) {
+        url = url.slice((indexOfSearchParam - 1), url.length)
       } else {
-        url += '?search=' + searchTerm
+        if(url.indexOf('?') > -1) {
+          url += '&search=' + searchTerm
+        } else {
+          url += '?search=' + searchTerm
+        }
       }
     }
 
@@ -120,7 +121,9 @@ class SpaceShipList extends PureComponent {
       const response = await this.handleRequestData(url)
       let starShipsProcessedProperties = []
 
-      response.data.results.map(starship => {
+      let result = response.data.results
+
+      result && result.map(starship => {
         starShipsProcessedProperties.push(this.handleProcessStarShipPropTypes(starship))
       })
 
@@ -167,7 +170,7 @@ class SpaceShipList extends PureComponent {
     const { distance } = this.props
     const { numOfStartShips, starShips, searchTerm, loading } = this.state
 
-    let showPagination = (numOfStartShips > 10)
+    let showPagination = (numOfStartShips > 10 && starShips.length < numOfStartShips)
 
     const classNameMap = {
       base: 'space-ship-list',
