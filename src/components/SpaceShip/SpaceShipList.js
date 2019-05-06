@@ -123,9 +123,9 @@ class SpaceShipList extends PureComponent {
 
       let result = response.data.results
 
-      result && result.map(starship => {
+      result && result.map(starship => (
         starShipsProcessedProperties.push(this.handleProcessStarShipPropTypes(starship))
-      })
+      ))
 
       this.handleChangeStarShips(starShipsProcessedProperties, response, url, loadAll, recursive)
       this.handleChange('loading', false)

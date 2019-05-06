@@ -7,8 +7,8 @@ import './assets/styles/SpaceChipCard.scss'
 //Components
 import textLimiter from '../TextLimiter'
 
-export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumable, calendarType = 'galactic') {
-  if(distance === null || mgltByHour === null || consumable === null) {
+export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumables, calendarType = 'galactic') {
+  if(distance === null || mgltByHour === null || consumables === null) {
     return null
   }
 
@@ -33,7 +33,7 @@ export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumable, cale
 
   // Tempo baseado no calendário galático https://starwars.fandom.com/wiki/Galactic_Standard_Calendar
 
-  let consumableSplited = consumable.split(' ')
+  let consumableSplited = consumables.split(' ')
   let consumableValue = parseFloat(consumableSplited[0])
   let consumableUnit = consumableSplited[1]
 
