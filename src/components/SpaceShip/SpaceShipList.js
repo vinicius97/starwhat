@@ -91,9 +91,30 @@ class SpaceShipList extends PureComponent {
     }
   }
 
-  handleLoadStarShips = async (url = 'https://swapi.co/api/starships') => {
-    try {
+  handleChangeStarShips = async (starShips, response, url, loadAll = false, recursive = false) => {
+    if(loadAll === true && recursive === false) {
+      this.handleChange('starShips', [])
+    }
 
+    if(loadAll) {
+      let concatStarShips = [...starShips, ...this.state.starShips]
+      let { data } = response
+      this.handleChange('starShips', concatStarShips)
+
+      if(response.data.next !== null && concatStarShips.length !== data.count) {
+        this.handleLoadStarShips(data.next, true, true)
+      } else {
+        this.handlePaginationState(data, url)
+      }
+
+    } else {
+      this.handleChange('starShips', starShips)
+      this.handlePaginationState(response.data, url)
+    }
+  }
+
+  handleLoadStarShips = async (url = 'https://swapi.co/api/starships', loadAll = false, recursive = false) => {
+    try {
       this.handleChange('loading', true)
 
       const response = await this.handleRequestData(url)
@@ -103,9 +124,7 @@ class SpaceShipList extends PureComponent {
         starShipsProcessedProperties.push(this.handleProcessStarShipPropTypes(starship))
       })
 
-      this.handleChange('starShips', starShipsProcessedProperties)
-      this.handlePaginationState(response.data, url)
-
+      this.handleChangeStarShips(starShipsProcessedProperties, response, url, loadAll, recursive)
       this.handleChange('loading', false)
 
     } catch (e) {
@@ -140,7 +159,7 @@ class SpaceShipList extends PureComponent {
   }
 
   componentDidMount() {
-    this.handleLoadStarShips()
+    this.handleLoadStarShips('https://swapi.co/api/starships', true)
   }
 
   render() {
