@@ -7,64 +7,41 @@ import './assets/styles/SpaceChipCard.scss'
 //Components
 import textLimiter from '../TextLimiter'
 
-export function calculateNumOfStopsByMGLT(distance, mgltByHour, consumables, calendarType = 'galactic') {
+export function calculateNumOfStopsToRessuplyByMGLT(distance, mgltByHour, consumables) {
   if(distance === null || mgltByHour === null || consumables === null) {
     return null
   }
 
   const hour = 1
   const day = 24 * hour
-
-  const galacticCalendar = {
-    hour,
-    day,
-    week: 5 * day,
-    month: 35 * day,
-    year: 368 * day
-  }
-
-  const earthCalendar = {
-    hour,
-    day,
-    week: 7 * day,
-    month: 31 * day,
-    year: 365 * day
-  }
-
-  // Tempo baseado no calendário galático https://starwars.fandom.com/wiki/Galactic_Standard_Calendar
+  const week =  7 * day
+  const month = 31 * day
+  const year = 365 * day
 
   let consumableSplited = consumables.split(' ')
   let consumableValue = parseFloat(consumableSplited[0])
   let consumableUnit = consumableSplited[1]
 
-  let calendar = null
-  if(calendarType === 'galactic') {
-    calendar = galacticCalendar
-  } else {
-    calendar = earthCalendar
+  let unitConversionFactor = {
+    hour: hour,
+    hours: hour,
+    day: day,
+    days: day,
+    week: week,
+    weeks: week,
+    month: month,
+    months: month,
+    year: year,
+    years: year
   }
 
-  let convertionFactor = {
-    hour: calendar.hour,
-    hours: calendar.hour,
-    day: calendar.day,
-    days: calendar.day,
-    week: calendar.week,
-    weeks: calendar.week,
-    month: calendar.month,
-    months: calendar.month,
-    year: calendar.year,
-    years: calendar.year
-  }
-
-  let consumableUnitInHours = convertionFactor[consumableUnit]
+  let consumableUnitInHours = unitConversionFactor[consumableUnit]
   let consumableValueInHours = consumableValue * consumableUnitInHours
 
-  let tripTime = distance/mgltByHour
+  let tripTimeInHours = distance/mgltByHour
+  let numOfStopsToResupply = tripTimeInHours/consumableValueInHours
 
-  let numOfStops = tripTime/consumableValueInHours
-
-  return Math.ceil(numOfStops)
+  return Math.round(numOfStopsToResupply)
 }
 
 class SpaceShipCard extends PureComponent {
@@ -87,16 +64,6 @@ class SpaceShipCard extends PureComponent {
     name: null
   }
 
-  state = {
-    useEarthCalendar: false
-  }
-
-  handleUseEarthCalendar = () => {
-    this.setState({
-      useEarthCalendar: !this.state.useEarthCalendar
-    })
-  }
-
   render() {
     const {
       distance,
@@ -107,10 +74,6 @@ class SpaceShipCard extends PureComponent {
       mglt
     } = this.props
 
-    const {
-      useEarthCalendar
-    } = this.state
-
     const classNameMap = {
       base: 'space-ship-card',
       body: 'space-ship-card__body',
@@ -119,23 +82,17 @@ class SpaceShipCard extends PureComponent {
       field_value: 'space-ship-card__body__field__value'
     }
 
-    let calendar = useEarthCalendar ? 'earth' : 'galactic'
-    let numOfStopsNeeded = calculateNumOfStopsByMGLT(distance, mglt, consumables, calendar)
+    let numOfStopsNeeded = calculateNumOfStopsToRessuplyByMGLT(distance, mglt, consumables)
 
     return (
       <div className={classNameMap.base}>
-
-        <div onClick={() => this.handleUseEarthCalendar()}>
-          {useEarthCalendar ? '[x]' : '[ ]'} Usar calendário terráqueo
-        </div>
-
         <div className={classNameMap.body}>
           <div className={classNameMap.field}>
             <span className={classNameMap.field_key}>
               Nome
             </span>
             <span className={classNameMap.field_value}>
-              {textLimiter(name, 23)}
+              {textLimiter(name, 21)}
             </span>
           </div>
           <div className={classNameMap.field}>
@@ -143,7 +100,7 @@ class SpaceShipCard extends PureComponent {
               Modelo
             </span>
             <span className={classNameMap.field_value}>
-              {textLimiter(model, 22)}
+              {textLimiter(model, 20)}
             </span>
           </div>
           <div className={classNameMap.field}>
@@ -151,7 +108,7 @@ class SpaceShipCard extends PureComponent {
               Fabricante
             </span>
             <span className={classNameMap.field_value}>
-              {textLimiter(manufacturer, 19)}
+              {textLimiter(manufacturer, 17)}
             </span>
           </div>
           <div className={classNameMap.field}>
@@ -164,7 +121,7 @@ class SpaceShipCard extends PureComponent {
           </div>
           <div className={classNameMap.field}>
             <span className={classNameMap.field_key}>
-              Número de paradas
+              Número de paradas para reabastecer
             </span>
             <span className={classNameMap.field_value}>
               {

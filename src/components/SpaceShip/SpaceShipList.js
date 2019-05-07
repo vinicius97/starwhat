@@ -102,7 +102,7 @@ class SpaceShipList extends PureComponent {
       let { data } = response
       this.handleChange('starShips', concatStarShips)
 
-      if(response.data.next !== null && concatStarShips.length !== data.count) {
+      if(response.data.next !== null && concatStarShips.length < data.count) {
         this.handleLoadStarShips(data.next, true, true)
       } else {
         this.handlePaginationState(data, url)
@@ -140,7 +140,14 @@ class SpaceShipList extends PureComponent {
 
   handleChangeSearchTerm = async (searchTerm) => {
     await this.handleChange('searchTerm', searchTerm)
-    this.handleLoadStarShips()
+
+    let waitForStopTyping = setTimeout(() => {
+      if(this.state.searchTerm === searchTerm) {
+        this.handleLoadStarShips()
+      }
+    }, 500)
+
+    return waitForStopTyping
   }
 
   handleLoadNextPage = () => {
@@ -168,9 +175,9 @@ class SpaceShipList extends PureComponent {
   render() {
 
     const { distance } = this.props
-    const { numOfStartShips, starShips, searchTerm, loading } = this.state
+    const { starShips, searchTerm, loading } = this.state
 
-    let showPagination = (numOfStartShips > 10 && starShips.length < numOfStartShips)
+    let showPagination = (searchTerm !== null)
 
     const classNameMap = {
       base: 'space-ship-list',
@@ -184,8 +191,6 @@ class SpaceShipList extends PureComponent {
           className={classNameMap.search}
           placeholder='Buscar por uma nave específica'
           onChange={(e) => this.handleChangeSearchTerm(e.target.value)} />
-
-        {searchTerm && (`Termo de busca: ${searchTerm}`)}
 
         {loading ? (
           <Loader />
