@@ -1,7 +1,10 @@
 Este projeto foi criado utilizando [Create React App](https://github.com/facebook/create-react-app)
 
 ## Code Style
- [Standard JS](https://standardjs.com/)
+
+Javascript [Standard JS](https://standardjs.com/)
+
+CSS [BEM](http://getbem.com/)
 
 ## Scripts disponíveis
 
