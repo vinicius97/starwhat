@@ -9,6 +9,9 @@ import { SpaceShipCard } from './SpaceShipCard'
 import { PaginationNavigation } from '../Pagination'
 import { Loader } from '../Loader'
 
+//Constants
+import { endpoints } from '../../constants/endpoints'
+
 //Assets
 import './assets/styles/SpaceShipList.scss'
 import { BasicInput } from '../Form/Input'
@@ -114,7 +117,7 @@ class SpaceShipList extends PureComponent {
     }
   }
 
-  handleLoadStarShips = async (url = 'https://swapi.co/api/starships', loadAll = false, recursive = false) => {
+  handleLoadStarShips = async (url = endpoints.starShips, loadAll = false, recursive = false) => {
     try {
       this.handleChange('loading', true)
 
@@ -168,8 +171,13 @@ class SpaceShipList extends PureComponent {
     }
   }
 
+  handleShowAll = () => {
+    this.handleChange('searchTerm', null)
+    this.handleLoadStarShips(endpoints.starShips, true)
+  }
+
   componentDidMount() {
-    this.handleLoadStarShips('https://swapi.co/api/starships', true)
+    this.handleShowAll()
   }
 
   render() {
