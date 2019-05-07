@@ -109,6 +109,7 @@ class SpaceShipList extends PureComponent {
         this.handleLoadStarShips(data.next, true, true)
       } else {
         this.handlePaginationState(data, url)
+        this.handleChange('loading', false)
       }
 
     } else {
@@ -131,7 +132,10 @@ class SpaceShipList extends PureComponent {
       ))
 
       this.handleChangeStarShips(starShipsProcessedProperties, response, url, loadAll, recursive)
-      this.handleChange('loading', false)
+
+      if(!recursive) {
+        this.handleChange('loading', false)
+      }
 
     } catch (e) {
 
