@@ -4,7 +4,7 @@ Este projeto foi criado utilizando [Create React App](https://github.com/faceboo
 
 Javascript [Standard JS](https://standardjs.com/)
 
-CSS [BEM](https://getbem.com/)
+CSS [BEM](http://getbem.com/)
 
 ## Scripts disponíveis
 
