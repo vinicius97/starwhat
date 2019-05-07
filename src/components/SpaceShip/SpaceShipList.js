@@ -115,10 +115,10 @@ class SpaceShipList extends PureComponent {
 
       this.handleChange('starShips', concatStarShips)
       this.handleLoadStarShipsRecursive(data, concatStarShips, url)
-
     } else {
       this.handleChange('starShips', starShips)
       this.handlePaginationState(response.data, url)
+      this.handleChange('loading', false)
     }
   }
 
@@ -128,7 +128,6 @@ class SpaceShipList extends PureComponent {
 
       const response = await this.handleRequestData(url)
       let starShipsProcessedProperties = []
-
       let result = response.data.results
 
       result && result.map(starship => (
@@ -137,15 +136,9 @@ class SpaceShipList extends PureComponent {
 
       this.handleChangeStarShips(starShipsProcessedProperties, response, url, loadAll, recursive)
 
-      if(!recursive) {
-        this.handleChange('loading', false)
-      }
-
     } catch (e) {
-
       this.handleChange('loading', false)
       throw e
-
     }
   }
 
