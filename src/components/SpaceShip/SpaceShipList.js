@@ -146,7 +146,11 @@ class SpaceShipList extends PureComponent {
 
     let waitForStopTyping = setTimeout(() => {
       if(this.state.searchTerm === searchTerm) {
-        this.handleLoadStarShips()
+        if(searchTerm === null || searchTerm === '') {
+          this.handleShowAll()
+        } else {
+          this.handleLoadStarShips()
+        }
       }
     }, 500)
 
