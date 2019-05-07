@@ -95,6 +95,15 @@ class SpaceShipList extends PureComponent {
     }
   }
 
+  handleLoadStarShipsRecursive = (data, concatStarShips, url) => {
+    if(data.next !== null && concatStarShips.length < data.count) {
+      this.handleLoadStarShips(data.next, true, true)
+    } else {
+      this.handlePaginationState(data, url)
+      this.handleChange('loading', false)
+    }
+  }
+
   handleChangeStarShips = async (starShips, response, url, loadAll = false, recursive = false) => {
     if(loadAll === true && recursive === false) {
       this.handleChange('starShips', [])
@@ -103,14 +112,9 @@ class SpaceShipList extends PureComponent {
     if(loadAll) {
       let concatStarShips = [...starShips, ...this.state.starShips]
       let { data } = response
-      this.handleChange('starShips', concatStarShips)
 
-      if(response.data.next !== null && concatStarShips.length < data.count) {
-        this.handleLoadStarShips(data.next, true, true)
-      } else {
-        this.handlePaginationState(data, url)
-        this.handleChange('loading', false)
-      }
+      this.handleChange('starShips', concatStarShips)
+      this.handleLoadStarShipsRecursive(data, concatStarShips, url)
 
     } else {
       this.handleChange('starShips', starShips)
