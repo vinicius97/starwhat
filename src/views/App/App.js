@@ -46,7 +46,7 @@ class App extends PureComponent {
           <BasicInput
             type='number'
             placeholder='Ex: 10'
-            onChange={(e) => this.handleChange('distance', e.target.value)} />
+            onChange={(e) => this.handleChange('distance', parseInt(e.target.value))} />
         </div>
 
         <SpaceShipList searchTerm={searchTerm} distance={distance} />
